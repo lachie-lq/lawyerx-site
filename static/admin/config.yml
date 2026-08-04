@@ -2,6 +2,8 @@ backend:
   name: github
   repo: lachie-lq/lawyerx-site
   branch: main
+  base_url: https://lawyerx-site.pages.dev
+  auth_endpoint: api/auth
 
 site_url: https://lawyerx.com
 display_url: https://lawyerx.com
