@@ -31,15 +31,32 @@ function popupSuccessHTML({ token, provider }) {
 <script>
 (function () {
   var payload = ${payload};
-  function send() {
+  var origin = window.location.origin;
+  /* Decap CMS 两步握手协议：
+   * 1. 先发送 authorizing:github 通知 CMS 切换监听器
+   * 2. 等待 CMS 回传 authorizing:github
+   * 3. 再发送 authorization:github:success:... 传递 token
+   */
+  function sendAuth() {
     if (window.opener) {
       window.opener.postMessage(
-        'authorization:github:success:' + JSON.stringify(payload), '*');
+        'authorization:github:success:' + JSON.stringify(payload), origin);
     }
   }
-  send();
-  setTimeout(send, 500);
-  setTimeout(function () { window.close(); }, 1500);
+  function onMessage(e) {
+    if (e.data === 'authorizing:github') {
+      window.removeEventListener('message', onMessage, false);
+      window.opener.postMessage(e.data, e.origin);
+      sendAuth();
+      setTimeout(sendAuth, 500);
+      setTimeout(function () { window.close(); }, 1500);
+    }
+  }
+  window.addEventListener('message', onMessage, false);
+  /* 通知 CMS：开始授权 */
+  if (window.opener) {
+    window.opener.postMessage('authorizing:github', origin);
+  }
 })();
 </script>
 <p>GitHub 登录完成，可以关闭此窗口。</p>
@@ -56,11 +73,25 @@ function popupErrorHTML(message) {
 <script>
 (function () {
   var payload = ${payload};
-  if (window.opener) {
-    window.opener.postMessage(
-      'authorization:github:error:' + JSON.stringify(payload), '*');
+  var origin = window.location.origin;
+  function sendError() {
+    if (window.opener) {
+      window.opener.postMessage(
+        'authorization:github:error:' + JSON.stringify(payload), origin);
+    }
   }
-  setTimeout(function () { window.close(); }, 2000);
+  function onMessage(e) {
+    if (e.data === 'authorizing:github') {
+      window.removeEventListener('message', onMessage, false);
+      window.opener.postMessage(e.data, e.origin);
+      sendError();
+      setTimeout(function () { window.close(); }, 2000);
+    }
+  }
+  window.addEventListener('message', onMessage, false);
+  if (window.opener) {
+    window.opener.postMessage('authorizing:github', origin);
+  }
 })();
 </script>
 <p>登录失败：${message}</p>
