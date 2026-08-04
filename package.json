@@ -1,0 +1,10 @@
+{
+  "name": "xiaotong-lawyer-website",
+  "version": "4.0.0",
+  "private": true,
+  "description": "肖通律师个人网站，支持Decap CMS图文自助发布。",
+  "scripts": {
+    "build": "node build.js",
+    "preview": "node build.js && python3 -m http.server 8080 -d _site"
+  }
+}

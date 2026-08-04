@@ -1,0 +1,18 @@
+[build]
+  command = "node build.js"
+  publish = "_site"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+
+[[redirects]]
+  from = "https://www.lawyerx.com/*"
+  to = "https://lawyerx.com/:splat"
+  status = 301
+  force = true
