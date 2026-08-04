@@ -136,26 +136,26 @@ async function handleCallback(request, env) {
 
 /* ---------- main entry ---------- */
 
-export default {
-  async fetch(request, env) {
-    // Require credentials
-    if (!env.GITHUB_CLIENT_ID || !env.GITHUB_CLIENT_SECRET) {
-      return htmlResponse(
-        '<h1>配置错误</h1><p>请在 Cloudflare Pages 环境变量中设置 GITHUB_CLIENT_ID 和 GITHUB_CLIENT_SECRET。</p>',
-        500
-      );
-    }
+export const onRequestGet = async ({ request, env }) => {
+  // Require credentials
+  if (!env.GITHUB_CLIENT_ID || !env.GITHUB_CLIENT_SECRET) {
+    return htmlResponse(
+      '<h1>配置错误</h1><p>请在 Cloudflare Pages 环境变量中设置 GITHUB_CLIENT_ID 和 GITHUB_CLIENT_SECRET。</p>',
+      500
+    );
+  }
 
-    const url = new URL(request.url);
+  const url = new URL(request.url);
 
-    if (url.pathname === '/api/auth') {
-      return handleAuth(request, env);
-    }
+  if (url.pathname === '/api/auth') {
+    return handleAuth(request, env);
+  }
 
-    if (url.pathname === '/api/callback') {
-      return handleCallback(request, env);
-    }
+  if (url.pathname === '/api/callback') {
+    return handleCallback(request, env);
+  }
 
-    return new Response('Not Found', { status: 404 });
-  },
+  return new Response('Not Found', { status: 404 });
 };
+
+export const onRequestPost = onRequestGet;
