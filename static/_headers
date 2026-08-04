@@ -7,4 +7,4 @@
 /admin/*
   X-Robots-Tag: noindex, nofollow
   Cache-Control: no-store
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.github.com https://github.com; font-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.github.com https://github.com; font-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'
